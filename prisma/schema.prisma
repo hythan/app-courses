@@ -15,22 +15,31 @@ model Admin {
   name String 
   email String @unique
   password String 
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model Course {
   id Int @default (autoincrement()) @id
-  title String 
+  name String 
   goal String
   information String
-  duration DateTime
+  requirements String
+  duration Int
+  price Float
   classes Class[]
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model Teacher {
   id Int @default (autoincrement()) @id
   name String
   email String @unique
-  registrations Registration[]
+  curriculum String
+  classes Class[]
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model Student {
@@ -39,22 +48,32 @@ model Student {
   email String @unique
   password String
   registrations Registration[]
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model Class {
   id Int @default (autoincrement()) @id
-  code String
+  name String
   course Course @relation(fields:[courseId], references: [id])
   courseId Int
   registrations Registration[]
+  information String
+  location String
+  startDate DateTime
+  classTimes String
+  teacher Teacher @relation(fields:[teacherId], references: [id])
+  teacherId Int
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model Registration {
   id Int @default (autoincrement()) @id
   classId Int
   class Class @relation(fields: [classId], references: [id])
-  teacherId Int
-  teacher Teacher @relation(fields: [teacherId], references: [id])
   studentId Int
   student Student @relation(fields: [studentId], references: [id])
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 } 

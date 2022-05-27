@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class StudentsService {
-  constructor(private prisma: PrismaService, private bcrypt: Bcrypt) { }
+  constructor(private prisma: PrismaService, private bcrypt: Bcrypt) {}
 
   async create(data: Prisma.StudentCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);
@@ -20,7 +20,7 @@ export class StudentsService {
     return this.prisma.student.findUnique(params);
   }
 
-  async update(id: number, data: Prisma.StudentCreateInput) {
+  async update(id: number, data: Prisma.StudentUpdateInput) {
     return await this.prisma.student.update({ where: { id }, data });
   }
 

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
 
 @Controller('admins')
@@ -14,7 +15,7 @@ export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
   @Post()
-  create(@Body() postData: { name: string; email: string; password: string }) {
+  create(@Body() postData: Prisma.AdminCreateInput) {
     return this.adminsService.create(postData);
   }
 
@@ -29,10 +30,7 @@ export class AdminsController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateData: { name: string; email: string; password: string },
-  ) {
+  update(@Param('id') id: string, @Body() updateData: Prisma.AdminUpdateInput) {
     return this.adminsService.update(+id, updateData);
   }
 

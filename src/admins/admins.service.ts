@@ -21,7 +21,7 @@ export class AdminsService {
     return this.prisma.admin.findUnique({ where });
   }
 
-  async update(id: number, data: Prisma.AdminCreateInput) {
+  async update(id: number, data: Prisma.AdminUpdateInput) {
     return await this.prisma.admin.update({ where: { id }, data });
   }
 
