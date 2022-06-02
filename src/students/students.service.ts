@@ -7,24 +7,24 @@ import { PrismaService } from 'src/prisma.service';
 export class StudentsService {
   constructor(private prisma: PrismaService, private bcrypt: Bcrypt) {}
 
-  async create(data: Prisma.StudentCreateInput) {
+  async create(data: Prisma.StudentsCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);
-    return await this.prisma.student.create({ data });
+    return await this.prisma.students.create({ data });
   }
 
   all() {
-    return this.prisma.student.findMany();
+    return this.prisma.students.findMany();
   }
 
-  async findBy(params: { where: Prisma.StudentWhereUniqueInput }) {
-    return this.prisma.student.findUnique(params);
+  async findBy(params: { where: Prisma.StudentsWhereUniqueInput }) {
+    return this.prisma.students.findUnique(params);
   }
 
-  async update(id: number, data: Prisma.StudentUpdateInput) {
-    return await this.prisma.student.update({ where: { id }, data });
+  async update(id: number, data: Prisma.StudentsUpdateInput) {
+    return await this.prisma.students.update({ where: { id }, data });
   }
 
   async remove(id: number) {
-    return this.prisma.student.delete({ where: { id } });
+    return this.prisma.students.delete({ where: { id } });
   }
 }

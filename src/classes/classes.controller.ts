@@ -15,7 +15,7 @@ export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
   @Post()
-  create(@Body() postData: Prisma.ClassCreateInput) {
+  create(@Body() postData: Prisma.ClassesCreateInput) {
     postData.startDate = new Date(postData.startDate);
     return this.classesService.create(postData);
   }
@@ -31,7 +31,7 @@ export class ClassesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() postData: Prisma.ClassUpdateInput) {
+  update(@Param('id') id: string, @Body() postData: Prisma.ClassesUpdateInput) {
     return this.classesService.update(+id, postData);
   }
 

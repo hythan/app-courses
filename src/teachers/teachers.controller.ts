@@ -15,7 +15,7 @@ export class TeachersController {
   constructor(private readonly teachersService: TeachersService) {}
 
   @Post()
-  create(@Body() postData: Prisma.TeacherCreateInput) {
+  create(@Body() postData: Prisma.TeachersCreateInput) {
     return this.teachersService.create(postData);
   }
 
@@ -30,7 +30,10 @@ export class TeachersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() postData: Prisma.TeacherUpdateInput) {
+  update(
+    @Param('id') id: string,
+    @Body() postData: Prisma.TeachersUpdateInput,
+  ) {
     return this.teachersService.update(+id, postData);
   }
 

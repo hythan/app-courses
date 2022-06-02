@@ -15,7 +15,7 @@ export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
   @Post()
-  create(@Body() postData: Prisma.AdminCreateInput) {
+  create(@Body() postData: Prisma.AdminsCreateInput) {
     return this.adminsService.create(postData);
   }
 
@@ -30,7 +30,10 @@ export class AdminsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateData: Prisma.AdminUpdateInput) {
+  update(
+    @Param('id') id: string,
+    @Body() updateData: Prisma.AdminsUpdateInput,
+  ) {
     return this.adminsService.update(+id, updateData);
   }
 

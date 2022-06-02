@@ -17,7 +17,7 @@ export class CoursesController {
   @Post()
   create(
     @Body()
-    postData: Prisma.CourseCreateInput,
+    postData: Prisma.CoursesCreateInput,
   ) {
     return this.coursesService.create(postData);
   }
@@ -36,7 +36,7 @@ export class CoursesController {
   update(
     @Param('id') id: string,
     @Body()
-    postData: Prisma.CourseUpdateInput,
+    postData: Prisma.CoursesUpdateInput,
   ) {
     return this.coursesService.update(+id, postData);
   }

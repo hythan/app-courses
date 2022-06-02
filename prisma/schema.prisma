@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
+model Admins {
   id Int @default(autoincrement()) @id
   name String 
   email String @unique
@@ -19,7 +19,7 @@ model Admin {
   updateAt DateTime @updatedAt
 }
 
-model Course {
+model Courses {
   id Int @default (autoincrement()) @id
   name String 
   goal String
@@ -27,53 +27,53 @@ model Course {
   requirements String
   duration Int
   price Float
-  classes Class[]
+  classes Classes[]
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
 
-model Teacher {
+model Teachers {
   id Int @default (autoincrement()) @id
   name String
   email String @unique
   curriculum String
-  classes Class[]
+  classes Classes[]
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
 
-model Student {
+model Students {
   id Int @default (autoincrement()) @id
   name String
   email String @unique
   password String
-  registrations Registration[]
+  registrations Registrations[]
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
 
-model Class {
+model Classes {
   id Int @default (autoincrement()) @id
   name String
-  course Course @relation(fields:[courseId], references: [id])
+  course Courses @relation(fields:[courseId], references: [id])
   courseId Int
-  registrations Registration[]
+  registrations Registrations[]
   information String
   location String
   startDate DateTime
   classTimes String
-  teacher Teacher @relation(fields:[teacherId], references: [id])
+  teacher Teachers @relation(fields:[teacherId], references: [id])
   teacherId Int
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
 
-model Registration {
+model Registrations{
   id Int @default (autoincrement()) @id
   classId Int
-  class Class @relation(fields: [classId], references: [id])
+  class Classes @relation(fields: [classId], references: [id])
   studentId Int
-  student Student @relation(fields: [studentId], references: [id])
+  student Students @relation(fields: [studentId], references: [id])
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 } 

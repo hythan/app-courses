@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Admin" (
+CREATE TABLE "Admins" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -7,11 +7,11 @@ CREATE TABLE "Admin" (
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Admin_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Admins_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Course" (
+CREATE TABLE "Courses" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "goal" TEXT NOT NULL,
@@ -22,11 +22,11 @@ CREATE TABLE "Course" (
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Courses_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Teacher" (
+CREATE TABLE "Teachers" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -34,11 +34,11 @@ CREATE TABLE "Teacher" (
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Teacher_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Teachers_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Student" (
+CREATE TABLE "Students" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -46,11 +46,11 @@ CREATE TABLE "Student" (
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Students_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Class" (
+CREATE TABLE "Classes" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "courseId" INTEGER NOT NULL,
@@ -62,37 +62,37 @@ CREATE TABLE "Class" (
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Class_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Classes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Registration" (
+CREATE TABLE "Registrations" (
     "id" SERIAL NOT NULL,
     "classId" INTEGER NOT NULL,
     "studentId" INTEGER NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Registration_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Registrations_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Admin_email_key" ON "Admin"("email");
+CREATE UNIQUE INDEX "Admins_email_key" ON "Admins"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Teacher_email_key" ON "Teacher"("email");
+CREATE UNIQUE INDEX "Teachers_email_key" ON "Teachers"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_email_key" ON "Student"("email");
+CREATE UNIQUE INDEX "Students_email_key" ON "Students"("email");
 
 -- AddForeignKey
-ALTER TABLE "Class" ADD CONSTRAINT "Class_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Classes" ADD CONSTRAINT "Classes_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Courses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Class" ADD CONSTRAINT "Class_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "Teacher"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Classes" ADD CONSTRAINT "Classes_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "Teachers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Registration" ADD CONSTRAINT "Registration_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Registrations" ADD CONSTRAINT "Registrations_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Registration" ADD CONSTRAINT "Registration_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Registrations" ADD CONSTRAINT "Registrations_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Classes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -6,23 +6,23 @@ import { PrismaService } from 'src/prisma.service';
 export class ClassesService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: Prisma.ClassCreateInput) {
-    return this.prisma.class.create({ data });
+  create(data: Prisma.ClassesCreateInput) {
+    return this.prisma.classes.create({ data });
   }
 
   findAll() {
-    return this.prisma.class.findMany();
+    return this.prisma.classes.findMany();
   }
 
-  findBy(params: { where: Prisma.ClassWhereUniqueInput }) {
-    return this.prisma.class.findUnique(params);
+  findBy(params: { where: Prisma.ClassesWhereUniqueInput }) {
+    return this.prisma.classes.findUnique(params);
   }
 
-  update(id: number, data: Prisma.ClassUpdateInput) {
-    return this.prisma.class.update({ where: { id }, data });
+  update(id: number, data: Prisma.ClassesUpdateInput) {
+    return this.prisma.classes.update({ where: { id }, data });
   }
 
   remove(id: number) {
-    return this.prisma.class.delete({ where: { id } });
+    return this.prisma.classes.delete({ where: { id } });
   }
 }

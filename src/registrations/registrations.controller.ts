@@ -37,7 +37,7 @@ export class RegistrationsController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() postData: Prisma.RegistrationUpdateInput,
+    @Body() postData: Prisma.RegistrationsUpdateInput,
   ) {
     return this.registrationsService.update(+id, postData);
   }

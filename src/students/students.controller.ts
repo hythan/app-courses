@@ -20,7 +20,7 @@ export class StudentsController {
   }
 
   @Post()
-  create(@Body() postData: Prisma.StudentCreateInput) {
+  create(@Body() postData: Prisma.StudentsCreateInput) {
     return this.studentsService.create(postData);
   }
 
@@ -32,7 +32,7 @@ export class StudentsController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateData: Prisma.StudentUpdateInput,
+    @Body() updateData: Prisma.StudentsUpdateInput,
   ) {
     return this.studentsService.update(+id, updateData);
   }
