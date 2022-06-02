@@ -6,7 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
 
@@ -19,6 +21,7 @@ export class AdminsController {
     return this.adminsService.create(postData);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.adminsService.all();
