@@ -7,5 +7,6 @@ import { BcryptService } from 'src/helpers/bcrypt';
 @Module({
   controllers: [StudentsController],
   providers: [StudentsService, PrismaService, BcryptService],
+  exports: [StudentsService],
 })
 export class StudentsModule {}

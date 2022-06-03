@@ -12,7 +12,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
 
-@Controller('admins')
+@UseGuards(AuthGuard('jwt'))
+@Controller()
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 

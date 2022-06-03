@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { TeachersService } from './teachers.service';
 
-@Controller('teachers')
+@Controller()
 export class TeachersController {
   constructor(private readonly teachersService: TeachersService) {}
 
@@ -19,12 +21,13 @@ export class TeachersController {
     return this.teachersService.create(postData);
   }
 
-  @Get()
+  @Get('admins/teachers/all')
   findAll() {
     return this.teachersService.findAll();
   }
 
-  @Get(':id')
+  @UseGuards(AuthGuard('jwt1') || AuthGuard('jwt'))
+  @Get('teachers/:id')
   findById(@Param('id') id: string) {
     return this.teachersService.findBy({ where: { id: Number(id) } });
   }
