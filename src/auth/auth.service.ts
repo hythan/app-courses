@@ -15,25 +15,29 @@ export class AuthService {
 
   async validateAdmin(email: string, password: string): Promise<any> {
     const admin = await this.adminsService.findBy({ where: { email } });
-    if (admin && this.bcrypt.decrypt(password, admin.password)) {
+    if (admin && (await this.bcrypt.decrypt(password, admin.password))) {
       const { password, ...result } = admin;
       return result;
     }
-
-    return null;
   }
 
   async validadeStudent(email: string, password: string): Promise<any> {
     const student = await this.studentsService.findBy({ where: { email } });
-    if (student && this.bcrypt.decrypt(password, student.password)) {
+
+    if (student && (await this.bcrypt.decrypt(password, student.password))) {
       const { password, ...result } = student;
       return result;
     }
-
-    return null;
   }
 
-  async login(user: any) {
+  async loginAdmin(user: any) {
+    const payload = { email: user.email, sub: user.id };
+    return {
+      token: this.jwtService.sign(payload),
+    };
+  }
+
+  async loginStudent(user: any) {
     const payload = { email: user.email, sub: user.id };
     return {
       token: this.jwtService.sign(payload),

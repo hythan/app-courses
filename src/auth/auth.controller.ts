@@ -1,22 +1,20 @@
 import { Controller, Post, UseGuards, Request } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { AdminAuthGuard } from './admin-auth.guard';
+import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
-import { StudentAuthGuard } from './student-auth.guard';
 
 @Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AdminAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post('admins/login')
   async loginAdmin(@Request() req) {
-    return this.authService.login(req.user);
+    return this.authService.loginAdmin(req.user);
   }
 
-  @UseGuards(StudentAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post('students/login')
   async loginStudent(@Request() req) {
-    return this.authService.login(req.user);
+    return this.authService.loginStudent(req.user);
   }
 }

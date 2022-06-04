@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminsService } from './admins.service';
 
-@UseGuards(AuthGuard('jwt'))
-@Controller()
+@Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
@@ -22,7 +22,7 @@ export class AdminsController {
     return this.adminsService.create(postData);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt-admin'))
   @Get()
   findAll() {
     return this.adminsService.all();
