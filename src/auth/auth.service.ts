@@ -33,14 +33,18 @@ export class AuthService {
   async loginAdmin(user: any) {
     const payload = { email: user.email, sub: user.id };
     return {
-      token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload, {
+        secret: process.env.ADMIN_SECRET_KEY,
+      }),
     };
   }
 
   async loginStudent(user: any) {
     const payload = { email: user.email, sub: user.id };
     return {
-      token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload, {
+        secret: process.env.STUDENT_SECRET_KEY,
+      }),
     };
   }
 }

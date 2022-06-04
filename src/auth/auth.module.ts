@@ -12,15 +12,7 @@ import { StudentStrategy } from './student.strategy';
 import { StudentJwtStrategy } from './student-jwt.strategy';
 
 @Module({
-  imports: [
-    AdminsModule,
-    StudentsModule,
-    PassportModule,
-    JwtModule.register({
-      secret: process.env.SECRET_KEY,
-      signOptions: { expiresIn: '3600s' },
-    }),
-  ],
+  imports: [AdminsModule, StudentsModule, PassportModule, JwtModule],
   providers: [
     AuthService,
     BcryptService,
