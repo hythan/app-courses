@@ -32,7 +32,7 @@ export class StudentsController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string, @Request() req) {
-    return this.studentsService.findBy({ where: { id: Number(id) } });
+    return this.studentsService.findBy({ where: { id: Number(id) } }, req);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -40,8 +40,9 @@ export class StudentsController {
   update(
     @Param('id') id: string,
     @Body() updateData: Prisma.StudentsUpdateInput,
+    @Request() req,
   ) {
-    return this.studentsService.update(+id, updateData);
+    return this.studentsService.update(+id, updateData, req);
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
