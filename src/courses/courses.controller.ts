@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { CoursesService } from './courses.service';
 
+@UseGuards(AuthGuard('jwt-admin'))
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}

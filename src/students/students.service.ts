@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Request, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
 import { BcryptService } from 'src/helpers/bcrypt';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class StudentsService {
-  constructor(private prisma: PrismaService, private bcrypt: BcryptService) {}
+  constructor(
+    private prisma: PrismaService,
+    private bcrypt: BcryptService,
+    private jwtService: JwtService,
+  ) {}
 
   async create(data: Prisma.StudentsCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);

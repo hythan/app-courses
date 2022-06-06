@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -12,7 +11,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { TeachersService } from './teachers.service';
 
-@Controller()
+@UseGuards(AuthGuard('jwt-admin'))
+@Controller('teachers')
 export class TeachersController {
   constructor(private readonly teachersService: TeachersService) {}
 
@@ -21,18 +21,16 @@ export class TeachersController {
     return this.teachersService.create(postData);
   }
 
-  @Get('admins/teachers/all')
+  @Get()
   findAll() {
     return this.teachersService.findAll();
   }
 
-  @UseGuards(AuthGuard('jwt1') || AuthGuard('jwt'))
-  @Get('teachers/:id')
+  @Get(':id')
   findById(@Param('id') id: string) {
     return this.teachersService.findBy({ where: { id: Number(id) } });
   }
 
-  @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() postData: Prisma.TeachersUpdateInput,

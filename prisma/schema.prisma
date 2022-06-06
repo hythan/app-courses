@@ -70,6 +70,7 @@ model Classes {
 
 model Registrations{
   id Int @default (autoincrement()) @id
+  complete Boolean @default(false)
   classId Int
   class Classes @relation(fields: [classId], references: [id])
   studentId Int

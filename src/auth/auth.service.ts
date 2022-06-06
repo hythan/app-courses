@@ -31,19 +31,21 @@ export class AuthService {
   }
 
   async loginAdmin(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, id: user.id };
     return {
       token: this.jwtService.sign(payload, {
         secret: process.env.ADMIN_SECRET_KEY,
+        expiresIn: '4800s',
       }),
     };
   }
 
   async loginStudent(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, id: user.id };
     return {
       token: this.jwtService.sign(payload, {
         secret: process.env.STUDENT_SECRET_KEY,
+        expiresIn: '3600s',
       }),
     };
   }
