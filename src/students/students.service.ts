@@ -1,4 +1,4 @@
-import { Injectable, Request, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Request } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
 import { BcryptService } from 'src/helpers/bcrypt';
@@ -12,6 +12,19 @@ export class StudentsService {
     private jwtService: JwtService,
   ) {}
 
+  async getProfile(@Request() req) {
+    const id = await this._getUserId(req);
+    return this.prisma.students.findUnique({ where: { id } });
+  }
+
+  async updateProfile(@Request() req, data: Prisma.StudentsUpdateInput) {
+    const id = await this._getUserId(req);
+    if (data.password) {
+      data.password = await this.bcrypt.encrypt(data.password);
+    }
+    return await this.prisma.students.update({ where: { id }, data });
+  }
+
   async create(data: Prisma.StudentsCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);
     return await this.prisma.students.create({ data });
@@ -21,24 +34,13 @@ export class StudentsService {
     return this.prisma.students.findMany();
   }
 
-  async findBy(
-    params: { where: Prisma.StudentsWhereUniqueInput },
-    @Request() req = null,
-  ) {
-    if (!(await this._checkUser(req, params.where.id))) {
-      return null;
-    }
-
+  async findBy(params: { where: Prisma.StudentsWhereUniqueInput }) {
     return this.prisma.students.findUnique(params);
   }
 
-  async update(
-    id: number,
-    data: Prisma.StudentsUpdateInput,
-    @Request() req = null,
-  ) {
-    if (!(await this._checkUser(req, id))) {
-      return null;
+  async update(id: number, data: Prisma.StudentsUpdateInput) {
+    if (data.password) {
+      data.password = await this.bcrypt.encrypt(data.password);
     }
     return await this.prisma.students.update({ where: { id }, data });
   }
@@ -47,43 +49,19 @@ export class StudentsService {
     return this.prisma.students.delete({ where: { id } });
   }
 
-  async _checkUser(@Request() req, id) {
-    if (req === null) {
-      return true;
-    }
-
+  async _getUserId(@Request() req) {
     const token = req.headers.authorization.split(' ')[1];
-    const user = await this._tryGetUserFromTokenStudent(token);
-    if (user === null && this._tryGetUserFromTokenAdmin(token)) {
-      return true;
-    }
-
-    if (user.id !== id) {
-      return false;
-    }
-
-    return true;
+    const user = await this._getUserFromTokenStudent(token);
+    return user.id;
   }
 
-  async _tryGetUserFromTokenStudent(token) {
+  async _getUserFromTokenStudent(token) {
     try {
       return await this.jwtService.verifyAsync(token, {
         secret: process.env.STUDENT_SECRET_KEY,
       });
     } catch (e) {
-      return null;
+      throw new Error(e.message);
     }
-  }
-
-  async _tryGetUserFromTokenAdmin(token) {
-    try {
-      await this.jwtService.verifyAsync(token, {
-        secret: process.env.ADMIN_SECRET_KEY,
-      });
-    } catch (e) {
-      return e;
-    }
-
-    return true;
   }
 }
