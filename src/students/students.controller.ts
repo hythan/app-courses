@@ -3,19 +3,24 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { StudentsService } from './students.service';
 
 @Controller('students')
 export class StudentsController {
-  constructor(private readonly studentsService: StudentsService) {}
+  constructor(
+    private readonly studentsService: StudentsService,
+    @Inject('STUDENTS_SERVICE') private readonly client: ClientProxy,
+  ) {}
 
   @UseGuards(AuthGuard('jwt-student'))
   @Get('/profile')
@@ -34,12 +39,16 @@ export class StudentsController {
 
   @UseGuards(AuthGuard('jwt-admin'))
   @Get()
-  findAll() {
+  async findAll() {
+    const teste = await this.client.emit('students-all', {});
+    console.log(teste);
+
     return this.studentsService.all();
   }
 
   @Post()
   create(@Body() postData: Prisma.StudentsCreateInput) {
+    this.client.emit('create-student', postData);
     return this.studentsService.create(postData);
   }
 

@@ -7,6 +7,7 @@ services:
     container_name: app-courses
     depends_on:
       - database
+      - rabbitmq
     ports: 
       - '5000:3000'
     networks:
@@ -29,9 +30,27 @@ services:
     networks:
       - default
 
+  rabbitmq:
+    image: "rabbitmq:3.8-management-alpine"
+    container_name: nodejs-rabbitmq-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - "./.rabbitmq_data:/var/lib/rabbitmq/mnesia"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    networks:
+      - default
+      - app-certifications_default
+
 volumes:
   db_courses:
     driver: local
 networks:
   default:
     driver: bridge
+  app-certifications_default:
+    external: true

@@ -4,8 +4,24 @@ import { StudentsController } from './students.controller';
 import { PrismaService } from 'src/prisma.service';
 import { BcryptService } from 'src/helpers/bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
+  imports: [
+    ClientsModule.register([
+      {
+        name: 'STUDENTS_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://admin:admin@rabbitmq:5672'],
+          queue: 'students_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
+      },
+    ]),
+  ],
   controllers: [StudentsController],
   providers: [StudentsService, PrismaService, BcryptService, JwtService],
   exports: [StudentsService],
