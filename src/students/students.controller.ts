@@ -34,22 +34,23 @@ export class StudentsController {
     @Request() req,
     @Body() updateData: Prisma.StudentsUpdateInput,
   ) {
+    const id = this.studentsService._getUserId(req);
+    this.client.emit('update-student', { id: id, data: updateData });
     return this.studentsService.updateProfile(req, updateData);
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
   @Get()
   async findAll() {
-    const teste = await this.client.emit('students-all', {});
-    console.log(teste);
-
+    this.client.emit('find-all-students', {});
     return this.studentsService.all();
   }
 
   @Post()
-  create(@Body() postData: Prisma.StudentsCreateInput) {
-    this.client.emit('create-student', postData);
-    return this.studentsService.create(postData);
+  async create(@Body() postData: Prisma.StudentsCreateInput) {
+    const response = await this.studentsService.create(postData);
+    this.client.emit('create-student', response);
+    return response;
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
@@ -64,12 +65,14 @@ export class StudentsController {
     @Param('id') id: string,
     @Body() updateData: Prisma.StudentsUpdateInput,
   ) {
+    this.client.emit('update-student', { id: id, data: updateData });
     return this.studentsService.update(+id, updateData);
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
   @Delete(':id')
   remove(@Param('id') id: string) {
+    this.client.emit('delete-student', +id);
     return this.studentsService.remove(Number(id));
   }
 }
