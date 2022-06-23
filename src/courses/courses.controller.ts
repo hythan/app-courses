@@ -19,7 +19,7 @@ import { CoursesService } from './courses.service';
 export class CoursesController {
   constructor(
     private readonly coursesService: CoursesService,
-    @Inject('COURSES_SERVICES') private readonly client: ClientProxy,
+    // @Inject('COURSES_SERVICES') private readonly client: ClientProxy,
   ) {}
 
   @Post()
@@ -28,13 +28,13 @@ export class CoursesController {
     postData: Prisma.CoursesCreateInput,
   ) {
     const response = await this.coursesService.create(postData);
-    this.client.emit('create-course', response);
+    // this.client.emit('create-course', response);
     return response;
   }
 
   @Get()
   findAll() {
-    this.client.emit('all-course', {});
+    // this.client.emit('all-course', {});
     return this.coursesService.findAll();
   }
 
@@ -49,13 +49,13 @@ export class CoursesController {
     @Body()
     postData: Prisma.CoursesUpdateInput,
   ) {
-    this.client.emit('update-course', { id: id, data: postData });
+    // this.client.emit('update-course', { id: id, data: postData });
     return this.coursesService.update(+id, postData);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    this.client.emit('delete-course', +id);
+    // this.client.emit('delete-course', +id);
     return this.coursesService.remove(+id);
   }
 }

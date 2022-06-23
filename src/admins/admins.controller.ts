@@ -1,38 +1,27 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Param, UseGuards } from '@nestjs/common';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
 
-@UseGuards(AuthGuard('jwt-admin'))
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  @Post()
-  create(@Body() postData: Prisma.AdminsCreateInput) {
-    return this.adminsService.create(postData);
+  @UseGuards(AuthGuard('jwt-admin'))
+  @MessagePattern('create-admin')
+  async create(@Payload() postData: any) {
+    return await this.adminsService.create(postData.data);
   }
 
-  @Get()
   findAll() {
     return this.adminsService.all();
   }
 
-  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.adminsService.findBy({ where: { id: Number(id) } });
   }
 
-  @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateData: Prisma.AdminsUpdateInput,
@@ -40,7 +29,6 @@ export class AdminsController {
     return this.adminsService.update(+id, updateData);
   }
 
-  @Delete(':id')
   remove(@Param('id') id: string) {
     return this.adminsService.remove(Number(id));
   }

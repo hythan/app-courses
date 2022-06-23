@@ -21,7 +21,7 @@ export class RegistrationsController {
   constructor(
     private readonly registrationsService: RegistrationsService,
     private readonly classesService: ClassesService,
-    @Inject('REGISTRANTION_SERVICES') private readonly client: ClientProxy,
+    // @Inject('REGISTRANTION_SERVICES') private readonly client: ClientProxy,
   ) {}
 
   @Post()
@@ -36,7 +36,7 @@ export class RegistrationsController {
 
   @Get()
   findAll() {
-    this.client.emit('all-certification', {});
+    // this.client.emit('all-certification', {});
     return this.registrationsService.findAll();
   }
 
@@ -51,14 +51,14 @@ export class RegistrationsController {
     @Body() postData: Prisma.RegistrationsUpdateInput,
   ) {
     const response = await this.registrationsService.update(+id, postData);
-    if (response.complete) {
-      const _response = response;
-      const _class = await this.classesService.findBy({
-        where: { id: response.classId },
-      });
-      _response.classId = _class.courseId;
-      this.client.emit('create-or-update-certification', { data: _response });
-    }
+    // if (response.complete) {
+    //   const _response = response;
+    //   const _class = await this.classesService.findBy({
+    //     where: { id: response.classId },
+    //   });
+    //   _response.classId = _class.courseId;
+    //   this.client.emit('create-or-update-certification', { data: _response });
+    // }
     return response;
   }
 

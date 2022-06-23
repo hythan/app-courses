@@ -10,7 +10,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { StudentsService } from './students.service';
@@ -19,8 +19,8 @@ import { StudentsService } from './students.service';
 export class StudentsController {
   constructor(
     private readonly studentsService: StudentsService,
-    @Inject('STUDENTS_SERVICE') private readonly client: ClientProxy,
-  ) {}
+  ) // @Inject('STUDENTS_SERVICE') private readonly client: ClientProxy,
+  {}
 
   @UseGuards(AuthGuard('jwt-student'))
   @Get('/profile')
@@ -35,21 +35,21 @@ export class StudentsController {
     @Body() updateData: Prisma.StudentsUpdateInput,
   ) {
     const id = this.studentsService._getUserId(req);
-    this.client.emit('update-student', { id: id, data: updateData });
+    // this.client.emit('update-student', { id: id, data: updateData });
     return this.studentsService.updateProfile(req, updateData);
   }
 
-  @UseGuards(AuthGuard('jwt-admin'))
-  @Get()
+  @MessagePattern('all-courses-students')
   async findAll() {
-    this.client.emit('find-all-students', {});
-    return this.studentsService.all();
+    // this.client.emit('find-all-students', {});
+    console.log('ENTROU NO DO COURSE!!!!');
+    // return this.studentsService.all();
   }
 
   @Post()
   async create(@Body() postData: Prisma.StudentsCreateInput) {
     const response = await this.studentsService.create(postData);
-    this.client.emit('create-student', response);
+    // this.client.emit('create-student', response);
     return response;
   }
 
@@ -65,14 +65,14 @@ export class StudentsController {
     @Param('id') id: string,
     @Body() updateData: Prisma.StudentsUpdateInput,
   ) {
-    this.client.emit('update-student', { id: id, data: updateData });
+    // this.client.emit('update-student', { id: id, data: updateData });
     return this.studentsService.update(+id, updateData);
   }
 
   @UseGuards(AuthGuard('jwt-admin'))
   @Delete(':id')
   remove(@Param('id') id: string) {
-    this.client.emit('delete-student', +id);
+    // this.client.emit('delete-student', +id);
     return this.studentsService.remove(Number(id));
   }
 }

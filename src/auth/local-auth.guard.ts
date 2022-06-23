@@ -7,6 +7,7 @@ export class LocalAuthGuard extends AuthGuard(['admin', 'student']) {
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
+
     return user;
   }
 }

@@ -1,15 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { Admins, Prisma } from '@prisma/client';
 import { BcryptService } from 'src/helpers/bcrypt';
+import { ErrorsService } from 'src/helpers/errors.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class AdminsService {
-  constructor(private prisma: PrismaService, private bcrypt: BcryptService) {}
+  constructor(
+    private prisma: PrismaService,
+    private bcrypt: BcryptService,
+    private errorsService: ErrorsService,
+  ) {}
 
   async create(data: Prisma.AdminsCreateInput): Promise<Admins | null> {
-    data.password = await this.bcrypt.encrypt(data.password);
-    return await this.prisma.admins.create({ data });
+    try {
+      data.password = await this.bcrypt.encrypt(data.password);
+      return await this.prisma.admins.create({ data });
+    } catch (e: any) {
+      return this.errorsService.getErrorMessage(e);
+    }
   }
 
   all() {
