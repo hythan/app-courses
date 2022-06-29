@@ -1,5 +1,5 @@
 import { Body, Controller, Param, UseGuards } from '@nestjs/common';
-import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
@@ -8,12 +8,12 @@ import { AdminsService } from './admins.service';
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  @UseGuards(AuthGuard('jwt-admin'))
   @MessagePattern('create-admin')
   async create(@Payload() postData: any) {
     return await this.adminsService.create(postData.data);
   }
 
+  @MessagePattern('create-admin')
   findAll() {
     return this.adminsService.all();
   }
