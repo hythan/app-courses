@@ -6,56 +6,40 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
-  Inject,
 } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { AuthGuard } from '@nestjs/passport';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { Prisma } from '@prisma/client';
 import { CoursesService } from './courses.service';
 
-@UseGuards(AuthGuard('jwt-admin'))
-@Controller('courses')
+@Controller()
 export class CoursesController {
-  constructor(
-    private readonly coursesService: CoursesService,
-    // @Inject('COURSES_SERVICES') private readonly client: ClientProxy,
-  ) {}
+  constructor(private readonly coursesService: CoursesService) {}
 
-  @Post()
-  async create(
-    @Body()
-    postData: Prisma.CoursesCreateInput,
-  ) {
-    const response = await this.coursesService.create(postData);
-    // this.client.emit('create-course', response);
+  @MessagePattern('create-student')
+  async create(@Payload() payload: any) {
+    const response = await this.coursesService.create(payload.data);
     return response;
   }
 
-  @Get()
-  findAll() {
-    // this.client.emit('all-course', {});
-    return this.coursesService.findAll();
+  @MessagePattern('all-students')
+  async findAll() {
+    return await this.coursesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findBy({ where: { id: Number(id) } });
+  @MessagePattern('find-student')
+  async findOne(@Payload() payload: any) {
+    return await this.coursesService.findBy({
+      where: { id: Number(payload.id) },
+    });
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body()
-    postData: Prisma.CoursesUpdateInput,
-  ) {
-    // this.client.emit('update-course', { id: id, data: postData });
-    return this.coursesService.update(+id, postData);
+  @MessagePattern('update-student')
+  async update(@Payload() payload: any) {
+    return await this.coursesService.update(payload.id, payload.data);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    // this.client.emit('delete-course', +id);
-    return this.coursesService.remove(+id);
+  @MessagePattern('remove-student')
+  async remove(@Payload() payload: any) {
+    return await this.coursesService.remove(payload.id);
   }
 }

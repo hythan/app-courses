@@ -7,63 +7,52 @@ import {
   Param,
   Delete,
   UseGuards,
-  Inject,
 } from '@nestjs/common';
 import { RegistrationsService } from './registrations.service';
 import { Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ClientProxy } from '@nestjs/microservices';
 import { ClassesService } from 'src/classes/classes.service';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@UseGuards(JwtAuthGuard)
-@Controller('registrations')
+// @UseGuards(JwtAuthGuard)
+@Controller()
 export class RegistrationsController {
   constructor(
     private readonly registrationsService: RegistrationsService,
     private readonly classesService: ClassesService,
-    // @Inject('REGISTRANTION_SERVICES') private readonly client: ClientProxy,
   ) {}
 
-  @Post()
-  async create(@Body() params: { studentId: string; classId: string }) {
+  @MessagePattern('create-registration')
+  async create(@Payload() payload: any) {
     const data = {
-      student: { connect: { id: +params.studentId } },
-      class: { connect: { id: +params.classId } },
+      student: { connect: { id: payload.data.studentId } },
+      class: { connect: { id: payload.data.classId } },
     };
 
     return this.registrationsService.createRegistry(data);
   }
 
-  @Get()
-  findAll() {
-    // this.client.emit('all-certification', {});
-    return this.registrationsService.findAll();
+  @MessagePattern('find-all-registrations')
+  async findAll() {
+    return await this.registrationsService.findAll();
   }
 
-  @Get(':id')
+  @MessagePattern('find-registration')
   findOne(@Param('id') id: string) {
     return this.registrationsService.findBy({ where: { id: +id } });
   }
 
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() postData: Prisma.RegistrationsUpdateInput,
-  ) {
-    const response = await this.registrationsService.update(+id, postData);
-    // if (response.complete) {
-    //   const _response = response;
-    //   const _class = await this.classesService.findBy({
-    //     where: { id: response.classId },
-    //   });
-    //   _response.classId = _class.courseId;
-    //   this.client.emit('create-or-update-certification', { data: _response });
-    // }
+  @MessagePattern('update-registration')
+  async update(@Payload() payload: any) {
+    const response = await this.registrationsService.update(
+      payload.id,
+      payload.data,
+    );
     return response;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.registrationsService.remove(+id);
+  @MessagePattern('remove-registration')
+  remove(@Payload() payload: any) {
+    return this.registrationsService.remove(payload.id);
   }
 }

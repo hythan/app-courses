@@ -7,39 +7,38 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { TeachersService } from './teachers.service';
 
-@UseGuards(AuthGuard('jwt-admin'))
-@Controller('teachers')
+// @UseGuards(AuthGuard('jwt-admin'))
+@Controller()
 export class TeachersController {
   constructor(private readonly teachersService: TeachersService) {}
 
-  @Post()
-  create(@Body() postData: Prisma.TeachersCreateInput) {
-    return this.teachersService.create(postData);
+  @MessagePattern('create-teacher')
+  async create(@Payload() payload: any) {
+    return await this.teachersService.create(payload.data);
   }
 
-  @Get()
-  findAll() {
+  @MessagePattern('find-all-teachers')
+  async findAll() {
     return this.teachersService.findAll();
   }
 
-  @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.teachersService.findBy({ where: { id: Number(id) } });
+  @MessagePattern('find-teacher')
+  async findById(@Payload() payload: any) {
+    return this.teachersService.findBy({ where: { id: Number(payload.id) } });
   }
 
-  update(
-    @Param('id') id: string,
-    @Body() postData: Prisma.TeachersUpdateInput,
-  ) {
-    return this.teachersService.update(+id, postData);
+  @MessagePattern('update-teacher')
+  async update(@Payload() payload: any) {
+    return this.teachersService.update(payload.id, payload.data);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.teachersService.remove(+id);
+  @MessagePattern('remove-teacher')
+  async remove(@Payload() payload: any) {
+    return this.teachersService.remove(payload.id);
   }
 }

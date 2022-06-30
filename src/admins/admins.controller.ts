@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
 
-@Controller('admins')
+@Controller()
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
@@ -13,23 +13,23 @@ export class AdminsController {
     return await this.adminsService.create(postData.data);
   }
 
-  @MessagePattern('create-admin')
+  @MessagePattern('find-all-admins')
   findAll() {
     return this.adminsService.all();
   }
 
-  findOne(@Param('id') id: string) {
-    return this.adminsService.findBy({ where: { id: Number(id) } });
+  @MessagePattern('find-admin')
+  findOne(@Payload() postData: any) {
+    return this.adminsService.findBy({ where: { id: Number(postData.id) } });
   }
 
-  update(
-    @Param('id') id: string,
-    @Body() updateData: Prisma.AdminsUpdateInput,
-  ) {
-    return this.adminsService.update(+id, updateData);
+  @MessagePattern('update-admin')
+  update(@Payload() postData: any) {
+    return this.adminsService.update(postData.id, postData.data);
   }
 
-  remove(@Param('id') id: string) {
-    return this.adminsService.remove(Number(id));
+  @MessagePattern('remove-admin')
+  remove(@Payload() postData: any) {
+    return this.adminsService.remove(Number(postData.id));
   }
 }
