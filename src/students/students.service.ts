@@ -12,18 +12,18 @@ export class StudentsService {
     private jwtService: JwtService,
   ) {}
 
-  async getProfile(@Request() req) {
-    const id = await this._getUserId(req);
-    return this.prisma.students.findUnique({ where: { id } });
-  }
+  // async getProfile(@Request() req) {
+  //   const id = await this._getUserId(req);
+  //   return this.prisma.students.findUnique({ where: { id } });
+  // }
 
-  async updateProfile(@Request() req, data: Prisma.StudentsUpdateInput) {
-    const id = await this._getUserId(req);
-    if (data.password) {
-      data.password = await this.bcrypt.encrypt(data.password);
-    }
-    return await this.prisma.students.update({ where: { id }, data });
-  }
+  // async updateProfile(@Request() req, data: Prisma.StudentsUpdateInput) {
+  //   const id = await this._getUserId(req);
+  //   if (data.password) {
+  //     data.password = await this.bcrypt.encrypt(data.password);
+  //   }
+  //   return await this.prisma.students.update({ where: { id }, data });
+  // }
 
   async create(data: Prisma.StudentsCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);
@@ -47,21 +47,5 @@ export class StudentsService {
 
   async remove(id: number) {
     return this.prisma.students.delete({ where: { id } });
-  }
-
-  async _getUserId(@Request() req) {
-    const token = req.headers.authorization.split(' ')[1];
-    const user = await this._getUserFromTokenStudent(token);
-    return user.id;
-  }
-
-  async _getUserFromTokenStudent(token) {
-    try {
-      return await this.jwtService.verifyAsync(token, {
-        secret: process.env.STUDENT_SECRET_KEY,
-      });
-    } catch (e) {
-      throw new Error(e.message);
-    }
   }
 }

@@ -15,30 +15,30 @@ import { CoursesService } from './courses.service';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
-  @MessagePattern('create-student')
+  @MessagePattern('create-course')
   async create(@Payload() payload: any) {
     const response = await this.coursesService.create(payload.data);
     return response;
   }
 
-  @MessagePattern('all-students')
+  @MessagePattern('find-all-courses')
   async findAll() {
     return await this.coursesService.findAll();
   }
 
-  @MessagePattern('find-student')
+  @MessagePattern('find-course')
   async findOne(@Payload() payload: any) {
     return await this.coursesService.findBy({
       where: { id: Number(payload.id) },
     });
   }
 
-  @MessagePattern('update-student')
+  @MessagePattern('update-course')
   async update(@Payload() payload: any) {
     return await this.coursesService.update(payload.id, payload.data);
   }
 
-  @MessagePattern('remove-student')
+  @MessagePattern('remove-course')
   async remove(@Payload() payload: any) {
     return await this.coursesService.remove(payload.id);
   }

@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Patch,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
@@ -56,14 +45,12 @@ export class StudentsController {
   // @UseGuards(AuthGuard('jwt-admin'))
   @MessagePattern('update-student')
   update(@Payload() payload: any) {
-    // this.client.emit('update-student', { id: id, data: updateData });
     return this.studentsService.update(payload.id, payload.data);
   }
 
   // @UseGuards(AuthGuard('jwt-admin'))
   @MessagePattern('remove-student')
   remove(@Payload() payload: any) {
-    // this.client.emit('delete-student', +id);
     return this.studentsService.remove(Number(payload.id));
   }
 }
