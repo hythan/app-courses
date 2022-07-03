@@ -14,13 +14,13 @@ export class AdminsController {
   }
 
   @MessagePattern('find-all-admins')
-  findAll() {
-    return this.adminsService.all();
+  async findAll() {
+    return await this.adminsService.all();
   }
 
   @MessagePattern('find-admin')
-  findOne(@Payload() postData: any) {
-    return this.adminsService.findBy({ where: { id: Number(postData.id) } });
+  findBy(@Payload() postData: any) {
+    return this.adminsService.findBy({ where: postData.where });
   }
 
   @MessagePattern('update-admin')
@@ -31,5 +31,13 @@ export class AdminsController {
   @MessagePattern('remove-admin')
   remove(@Payload() postData: any) {
     return this.adminsService.remove(Number(postData.id));
+  }
+
+  @MessagePattern('validade-admin')
+  async validadeAdmin(@Payload() payload: any) {
+    return await this.adminsService.validadeAdminUser(
+      payload.email,
+      payload.password,
+    );
   }
 }

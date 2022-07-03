@@ -53,4 +53,12 @@ export class StudentsController {
   remove(@Payload() payload: any) {
     return this.studentsService.remove(Number(payload.id));
   }
+
+  @MessagePattern('validade-student')
+  async validadeStudent(@Payload() payload: any) {
+    return await this.studentsService.validadeStudentUser(
+      payload.email,
+      payload.password,
+    );
+  }
 }

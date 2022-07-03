@@ -48,4 +48,15 @@ export class StudentsService {
   async remove(id: number) {
     return this.prisma.students.delete({ where: { id } });
   }
+
+  async validadeStudentUser(email: string, password: string) {
+    const student = await this.findBy({ where: { email } });
+
+    if (student && (await this.bcrypt.decrypt(password, student.password))) {
+      const { password, ...result } = student;
+      return result;
+    }
+
+    return null;
+  }
 }

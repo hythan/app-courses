@@ -21,8 +21,8 @@ export class AdminsService {
     }
   }
 
-  all() {
-    return this.prisma.admins.findMany();
+  async all() {
+    return await this.prisma.admins.findMany();
   }
 
   async findBy(params: { where: Prisma.AdminsWhereUniqueInput }) {
@@ -36,5 +36,14 @@ export class AdminsService {
 
   async remove(id: number) {
     return this.prisma.admins.delete({ where: { id } });
+  }
+
+  async validadeAdminUser(email: string, password: string) {
+    const admin = await this.findBy({ where: { email } });
+    if (admin && (await this.bcrypt.decrypt(password, admin.password))) {
+      const { password, ...result } = admin;
+      return result;
+    }
+    return null;
   }
 }
