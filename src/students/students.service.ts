@@ -6,24 +6,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class StudentsService {
-  constructor(
-    private prisma: PrismaService,
-    private bcrypt: BcryptService,
-    private jwtService: JwtService,
-  ) {}
-
-  // async getProfile(@Request() req) {
-  //   const id = await this._getUserId(req);
-  //   return this.prisma.students.findUnique({ where: { id } });
-  // }
-
-  // async updateProfile(@Request() req, data: Prisma.StudentsUpdateInput) {
-  //   const id = await this._getUserId(req);
-  //   if (data.password) {
-  //     data.password = await this.bcrypt.encrypt(data.password);
-  //   }
-  //   return await this.prisma.students.update({ where: { id }, data });
-  // }
+  constructor(private prisma: PrismaService, private bcrypt: BcryptService) {}
 
   async create(data: Prisma.StudentsCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);

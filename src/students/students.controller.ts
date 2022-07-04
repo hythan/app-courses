@@ -8,23 +8,6 @@ import { StudentsService } from './students.service';
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
-  // @UseGuards(AuthGuard('jwt-student'))
-  // @Get('/profile')
-  // findProfile(@Request() req) {
-  //   return this.studentsService.getProfile(req);
-  // }
-
-  // @UseGuards(AuthGuard('jwt-student'))
-  // @Patch('/profile')
-  // updateProfile(
-  //   @Request() req,
-  //   @Body() updateData: Prisma.StudentsUpdateInput,
-  // ) {
-  //   const id = this.studentsService._getUserId(req);
-  //   // this.client.emit('update-student', { id: id, data: updateData });
-  //   return this.studentsService.updateProfile(req, updateData);
-  // }
-
   @MessagePattern('all-students')
   async findAll() {
     return this.studentsService.all();
@@ -36,19 +19,19 @@ export class StudentsController {
     return response;
   }
 
-  // @UseGuards(AuthGuard('jwt-admin'))
   @MessagePattern('find-student')
   async findOne(@Payload() payload: any) {
-    return this.studentsService.findBy({ where: { id: Number(payload.id) } });
+    console.log('---------------------------------');
+    console.log(payload.where);
+
+    return this.studentsService.findBy({ where: payload.where });
   }
 
-  // @UseGuards(AuthGuard('jwt-admin'))
   @MessagePattern('update-student')
   update(@Payload() payload: any) {
     return this.studentsService.update(payload.id, payload.data);
   }
 
-  // @UseGuards(AuthGuard('jwt-admin'))
   @MessagePattern('remove-student')
   remove(@Payload() payload: any) {
     return this.studentsService.remove(Number(payload.id));

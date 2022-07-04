@@ -1,5 +1,5 @@
 import { Body, Controller, Param, UseGuards } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
@@ -33,8 +33,10 @@ export class AdminsController {
     return this.adminsService.remove(Number(postData.id));
   }
 
-  @MessagePattern('validade-admin')
+  @MessagePattern('validate-admin')
   async validadeAdmin(@Payload() payload: any) {
+    console.log('12dwda');
+    
     return await this.adminsService.validadeAdminUser(
       payload.email,
       payload.password,
