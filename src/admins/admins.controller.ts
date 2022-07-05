@@ -35,8 +35,6 @@ export class AdminsController {
 
   @MessagePattern('validate-admin')
   async validadeAdmin(@Payload() payload: any) {
-    console.log('12dwda');
-    
     return await this.adminsService.validadeAdminUser(
       payload.email,
       payload.password,

@@ -21,9 +21,6 @@ export class StudentsController {
 
   @MessagePattern('find-student')
   async findOne(@Payload() payload: any) {
-    console.log('---------------------------------');
-    console.log(payload.where);
-
     return this.studentsService.findBy({ where: payload.where });
   }
 
@@ -37,7 +34,7 @@ export class StudentsController {
     return this.studentsService.remove(Number(payload.id));
   }
 
-  @MessagePattern('validade-student')
+  @MessagePattern('validate-student')
   async validadeStudent(@Payload() payload: any) {
     return await this.studentsService.validadeStudentUser(
       payload.email,

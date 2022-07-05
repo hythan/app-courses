@@ -9,12 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { RegistrationsService } from './registrations.service';
-import { Prisma } from '@prisma/client';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ClassesService } from 'src/classes/classes.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-// @UseGuards(JwtAuthGuard)
 @Controller()
 export class RegistrationsController {
   constructor(
