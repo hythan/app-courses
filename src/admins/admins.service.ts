@@ -1,19 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { Admins, Prisma } from '@prisma/client';
 import { BcryptService } from 'src/helpers/bcrypt';
+import { ErrorsService } from 'src/helpers/errors.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class AdminsService {
-  constructor(private prisma: PrismaService, private bcrypt: BcryptService) {}
+  constructor(
+    private prisma: PrismaService,
+    private bcrypt: BcryptService,
+    private errorsService: ErrorsService,
+  ) {}
 
   async create(data: Prisma.AdminsCreateInput): Promise<Admins | null> {
-    data.password = await this.bcrypt.encrypt(data.password);
-    return await this.prisma.admins.create({ data });
+    try {
+      data.password = await this.bcrypt.encrypt(data.password);
+      return await this.prisma.admins.create({ data });
+    } catch (e: any) {
+      return this.errorsService.getErrorMessage(e);
+    }
   }
 
-  all() {
-    return this.prisma.admins.findMany();
+  async all() {
+    return await this.prisma.admins.findMany();
   }
 
   async findBy(params: { where: Prisma.AdminsWhereUniqueInput }) {
@@ -27,5 +36,14 @@ export class AdminsService {
 
   async remove(id: number) {
     return this.prisma.admins.delete({ where: { id } });
+  }
+
+  async validadeAdminUser(email: string, password: string) {
+    const admin = await this.findBy({ where: { email } });
+    if (admin && (await this.bcrypt.decrypt(password, admin.password))) {
+      const { password, ...result } = admin;
+      return result;
+    }
+    return null;
   }
 }

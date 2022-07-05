@@ -1,47 +1,45 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Param, UseGuards } from '@nestjs/common';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { AdminsService } from './admins.service';
 
-@UseGuards(AuthGuard('jwt-admin'))
-@Controller('admins')
+@Controller()
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  @Post()
-  create(@Body() postData: Prisma.AdminsCreateInput) {
-    return this.adminsService.create(postData);
+  @MessagePattern('create-admin')
+  async create(@Payload() postData: any) {
+    return await this.adminsService.create(postData.data);
   }
 
-  @Get()
-  findAll() {
-    return this.adminsService.all();
+  @MessagePattern('find-all-admins')
+  async findAll() {
+    return await this.adminsService.all();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminsService.findBy({ where: { id: Number(id) } });
+  @MessagePattern('find-admin')
+  findBy(@Payload() postData: any) {
+    return this.adminsService.findBy({ where: postData.where });
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateData: Prisma.AdminsUpdateInput,
-  ) {
-    return this.adminsService.update(+id, updateData);
+  @MessagePattern('update-admin')
+  update(@Payload() postData: any) {
+    return this.adminsService.update(postData.id, postData.data);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminsService.remove(Number(id));
+  @MessagePattern('remove-admin')
+  remove(@Payload() postData: any) {
+    return this.adminsService.remove(Number(postData.id));
+  }
+
+  @MessagePattern('validate-admin')
+  async validadeAdmin(@Payload() payload: any) {
+    console.log('12dwda');
+    
+    return await this.adminsService.validadeAdminUser(
+      payload.email,
+      payload.password,
+    );
   }
 }

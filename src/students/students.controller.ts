@@ -1,78 +1,47 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Patch,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { StudentsService } from './students.service';
 
-@Controller('students')
+@Controller()
 export class StudentsController {
-  constructor(
-    private readonly studentsService: StudentsService,
-    @Inject('STUDENTS_SERVICE') private readonly client: ClientProxy,
-  ) {}
+  constructor(private readonly studentsService: StudentsService) {}
 
-  @UseGuards(AuthGuard('jwt-student'))
-  @Get('/profile')
-  findProfile(@Request() req) {
-    return this.studentsService.getProfile(req);
-  }
-
-  @UseGuards(AuthGuard('jwt-student'))
-  @Patch('/profile')
-  updateProfile(
-    @Request() req,
-    @Body() updateData: Prisma.StudentsUpdateInput,
-  ) {
-    const id = this.studentsService._getUserId(req);
-    this.client.emit('update-student', { id: id, data: updateData });
-    return this.studentsService.updateProfile(req, updateData);
-  }
-
-  @UseGuards(AuthGuard('jwt-admin'))
-  @Get()
+  @MessagePattern('all-students')
   async findAll() {
-    this.client.emit('find-all-students', {});
     return this.studentsService.all();
   }
 
-  @Post()
-  async create(@Body() postData: Prisma.StudentsCreateInput) {
-    const response = await this.studentsService.create(postData);
-    this.client.emit('create-student', response);
+  @MessagePattern('create-student')
+  async create(@Payload() payload: any) {
+    const response = await this.studentsService.create(payload.data);
     return response;
   }
 
-  @UseGuards(AuthGuard('jwt-admin'))
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.studentsService.findBy({ where: { id: Number(id) } });
+  @MessagePattern('find-student')
+  async findOne(@Payload() payload: any) {
+    console.log('---------------------------------');
+    console.log(payload.where);
+
+    return this.studentsService.findBy({ where: payload.where });
   }
 
-  @UseGuards(AuthGuard('jwt-admin'))
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateData: Prisma.StudentsUpdateInput,
-  ) {
-    this.client.emit('update-student', { id: id, data: updateData });
-    return this.studentsService.update(+id, updateData);
+  @MessagePattern('update-student')
+  update(@Payload() payload: any) {
+    return this.studentsService.update(payload.id, payload.data);
   }
 
-  @UseGuards(AuthGuard('jwt-admin'))
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.client.emit('delete-student', +id);
-    return this.studentsService.remove(Number(id));
+  @MessagePattern('remove-student')
+  remove(@Payload() payload: any) {
+    return this.studentsService.remove(Number(payload.id));
+  }
+
+  @MessagePattern('validade-student')
+  async validadeStudent(@Payload() payload: any) {
+    return await this.studentsService.validadeStudentUser(
+      payload.email,
+      payload.password,
+    );
   }
 }
