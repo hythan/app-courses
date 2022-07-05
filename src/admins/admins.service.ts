@@ -44,6 +44,7 @@ export class AdminsService {
       const { password, ...result } = admin;
       return result;
     }
+
     return null;
   }
 }
