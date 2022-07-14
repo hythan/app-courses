@@ -1,14 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Prisma } from '@prisma/client';
 import { CoursesService } from './courses.service';
 
 @Controller()
@@ -17,8 +8,7 @@ export class CoursesController {
 
   @MessagePattern('create-course')
   async create(@Payload() payload: any) {
-    const response = await this.coursesService.create(payload.data);
-    return response;
+    return await this.coursesService.create(payload.data);
   }
 
   @MessagePattern('find-all-courses')
