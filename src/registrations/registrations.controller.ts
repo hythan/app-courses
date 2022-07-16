@@ -17,7 +17,7 @@ export class RegistrationsController {
   constructor(
     private readonly registrationsService: RegistrationsService,
     private readonly classesService: ClassesService,
-  ) {}
+  ) { }
 
   @MessagePattern('create-registration')
   async create(@Payload() payload: any) {
@@ -35,8 +35,8 @@ export class RegistrationsController {
   }
 
   @MessagePattern('find-registration')
-  findOne(@Param('id') id: string) {
-    return this.registrationsService.findBy({ where: { id: +id } });
+  findOne(@Payload() payload: any) {
+    return this.registrationsService.findBy({ where: { id: +payload.id } });
   }
 
   @MessagePattern('update-registration')
@@ -46,6 +46,11 @@ export class RegistrationsController {
       payload.data,
     );
     return response;
+  }
+
+  @MessagePattern('update-many-registrations')
+  async updateMany(@Payload() payload: any) {
+    return await this.registrationsService.updateMany(payload.ids);
   }
 
   @MessagePattern('remove-registration')

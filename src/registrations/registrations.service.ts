@@ -14,11 +14,31 @@ export class RegistrationsService {
   }
 
   findBy(params: { where: Prisma.RegistrationsWhereUniqueInput }) {
-    return this.prisma.registrations.findUnique(params);
+    try {
+      const { where } = params;
+      return this.prisma.registrations.findUnique({
+        where,
+        include: {
+          student: true,
+          class: { include: { teacher: { select: { name: true } } } },
+        },
+      });
+    } catch (error) {
+      return error.message;
+    }
   }
 
   update(id: number, data: Prisma.RegistrationsUpdateInput) {
     return this.prisma.registrations.update({ where: { id }, data });
+  }
+
+  async updateMany(ids: Array<number>) {
+    return await this.prisma.registrations.updateMany({
+      where: { id: { in: ids } },
+      data: {
+        complete: true,
+      },
+    });
   }
 
   remove(id: number) {
