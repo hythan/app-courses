@@ -1,23 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { RegistrationsService } from './registrations.service';
-import { ClassesService } from 'src/classes/classes.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class RegistrationsController {
-  constructor(
-    private readonly registrationsService: RegistrationsService,
-    private readonly classesService: ClassesService,
-  ) { }
+  constructor(private readonly registrationsService: RegistrationsService) {}
 
   @MessagePattern('create-registration')
   async create(@Payload() payload: any) {
