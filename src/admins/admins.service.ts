@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Admins, Prisma } from '@prisma/client';
-import { BcryptService } from 'src/helpers/bcrypt';
-import { ErrorsService } from 'src/helpers/errors.service';
-import { PrismaService } from 'src/prisma.service';
+import { BcryptService } from '../helpers/bcrypt.service';
+import { ErrorsService } from '../helpers/errors.service';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class AdminsService {
@@ -22,7 +22,11 @@ export class AdminsService {
   }
 
   async all() {
-    return await this.prisma.admins.findMany();
+    try {
+      return await this.prisma.admins.findMany();
+    } catch (e: any) {
+      return e;
+    }
   }
 
   async findBy(params: { where: Prisma.AdminsWhereUniqueInput }) {

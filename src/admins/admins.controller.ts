@@ -1,7 +1,5 @@
-import { Body, Controller, Param, UseGuards } from '@nestjs/common';
-import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { AuthGuard } from '@nestjs/passport';
-import { Prisma } from '@prisma/client';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AdminsService } from './admins.service';
 
 @Controller()

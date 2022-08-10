@@ -1,7 +1,6 @@
 import { Injectable, Request } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
-import { BcryptService } from 'src/helpers/bcrypt';
+import { BcryptService } from 'src/helpers/bcrypt.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
