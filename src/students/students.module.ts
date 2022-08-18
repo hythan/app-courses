@@ -6,9 +6,9 @@ import { JwtService } from '@nestjs/jwt';
 import { HelpersModule } from 'src/helpers/helpers.module';
 
 @Module({
-  imports: [HelpersModule, PrismaService],
+  imports: [HelpersModule],
   controllers: [StudentsController],
-  providers: [StudentsService, JwtService],
+  providers: [StudentsService, JwtService, PrismaService],
   exports: [StudentsService],
 })
 export class StudentsModule {}

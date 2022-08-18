@@ -5,9 +5,9 @@ import { PrismaService } from 'src/prisma.service';
 import { HelpersModule } from 'src/helpers/helpers.module';
 
 @Module({
-  imports: [HelpersModule, PrismaService],
+  imports: [HelpersModule],
   controllers: [AdminsController],
-  providers: [AdminsService],
+  providers: [AdminsService, PrismaService],
   exports: [AdminsService],
 })
 export class AdminsModule {}
