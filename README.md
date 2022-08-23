@@ -24,36 +24,7 @@
 
 ## Description
 
-This is a project for my graduation. The following project is a microservice for management of courses and the gateway project is in the link: https://github.com/hythan/app-tcc
+This is a project for my graduation. The following project is a microservice for management of courses, the main project is in the link: https://github.com/hythan/app-tcc
 
 ## Installation
-
-```bash
-$ npm install
-```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
+For access the container of this application, you will need the app-tcc (https://github.com/hythan/app-tcc), there you have the containers and the commands for start this app. 
