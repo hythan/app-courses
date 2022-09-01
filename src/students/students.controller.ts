@@ -22,7 +22,7 @@ export class StudentsController {
     return this.studentsService.findBy({ where: payload.where });
   }
 
-  @MessagePattern('update-student')
+  @MessagePattern('update-courses-student')
   update(@Payload() payload: any) {
     return this.studentsService.update(payload.id, payload.data);
   }

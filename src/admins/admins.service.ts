@@ -35,9 +35,14 @@ export class AdminsService {
   }
 
   async update(id: number, data: Prisma.AdminsUpdateInput) {
+    if(data.password == '' || data.password == undefined) {
+      delete data.password;
+    }
+
     if(data.password) {
       data.password = await this.bcrypt.encrypt(data.password);
     }
+
     return await this.prisma.admins.update({ where: { id }, data });
   }
 

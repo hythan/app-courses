@@ -21,6 +21,10 @@ export class StudentsService {
   }
 
   async update(id: number, data: Prisma.StudentsUpdateInput) {
+    if(data.password == '' || data.password == undefined) {
+      delete data.password;
+    }
+
     if (data.password) {
       data.password = await this.bcrypt.encrypt(data.password);
     }
