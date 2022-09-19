@@ -10,16 +10,16 @@ export class ClassesService {
     return this.prisma.classes.create({ data });
   }
 
-  findAll() {
-    return this.prisma.classes.findMany({
+  async findAll() {
+    return await this.prisma.classes.findMany({
       include: {
         course: true,
       },
     });
   }
 
-  findBy(params: { where: Prisma.ClassesWhereUniqueInput }) {
-    return this.prisma.classes.findUnique(params);
+  async findBy(params: { where: Prisma.ClassesWhereUniqueInput }) {
+    return await this.prisma.classes.findUnique(params);
   }
 
   update(id: number, data: Prisma.ClassesUpdateInput) {
