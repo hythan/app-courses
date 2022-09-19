@@ -11,7 +11,11 @@ export class ClassesService {
   }
 
   findAll() {
-    return this.prisma.classes.findMany();
+    return this.prisma.classes.findMany({
+      include: {
+        course: true,
+      },
+    });
   }
 
   findBy(params: { where: Prisma.ClassesWhereUniqueInput }) {

@@ -8,7 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Prisma } from '@prisma/client';
 import { ClassesService } from './classes.service';
 
 @Controller('classes')
