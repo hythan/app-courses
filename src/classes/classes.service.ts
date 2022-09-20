@@ -13,7 +13,7 @@ export class ClassesService {
   async findAll() {
     return await this.prisma.classes.findMany({
       include: {
-        course: true,
+        course:{ select: {name: true}},
       },
     });
   }
