@@ -19,7 +19,7 @@ export class ClassesController {
 
   @MessagePattern('find-class')
   findOne(@Payload() payload: any) {
-    return this.classesService.findBy({ where: { id: payload.id } });
+    return this.classesService.findBy({ id: payload.id });
   }
 
   @MessagePattern('update-class')

@@ -13,13 +13,17 @@ export class ClassesService {
   async findAll() {
     return await this.prisma.classes.findMany({
       include: {
-        course:{ select: {name: true}},
+        course: { select: { name: true } },
+        registrations: true,
       },
     });
   }
 
-  async findBy(params: { where: Prisma.ClassesWhereUniqueInput }) {
-    return await this.prisma.classes.findUnique(params);
+  async findBy(where: Prisma.ClassesWhereUniqueInput) {
+    return await this.prisma.classes.findUnique({
+      where,
+      include: { registrations: { include: { class: true, student: true } } },
+    });
   }
 
   update(id: number, data: Prisma.ClassesUpdateInput) {
