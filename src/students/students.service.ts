@@ -5,14 +5,19 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class StudentsService {
-  constructor(private prisma: PrismaService, private bcrypt: BcryptService) {}
+  constructor(private prisma: PrismaService, private bcrypt: BcryptService) { }
 
   async create(data: Prisma.StudentsCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);
     return await this.prisma.students.create({ data });
   }
 
-  all() {
+  all(studentsIds?: Array<number>) {
+    if (studentsIds) {
+      return this.prisma.students.findMany({
+        where: { id: { notIn: studentsIds } },
+      });
+    }
     return this.prisma.students.findMany();
   }
 
