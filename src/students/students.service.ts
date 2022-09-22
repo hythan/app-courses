@@ -12,8 +12,9 @@ export class StudentsService {
     return await this.prisma.students.create({ data });
   }
 
-  all(studentsIds?: Array<number>) {
+  all(studentsIds?: any) {
     if (studentsIds) {
+      studentsIds = studentsIds.map((e) => parseInt(e));
       return this.prisma.students.findMany({
         where: { id: { notIn: studentsIds } },
       });

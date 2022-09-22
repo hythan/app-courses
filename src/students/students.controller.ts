@@ -8,7 +8,7 @@ export class StudentsController {
 
   @MessagePattern('all-courses-students')
   async findAll(@Payload() payload: any) {
-    return this.studentsService.all(payload.studenstIds);
+    return this.studentsService.all(payload.studentsIds.students_ids);
   }
 
   @MessagePattern('create-courses-student')
