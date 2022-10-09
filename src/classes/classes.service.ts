@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class ClassesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   create(data: Prisma.ClassesCreateInput) {
     return this.prisma.classes.create({ data });
@@ -31,6 +31,8 @@ export class ClassesService {
   }
 
   update(id: number, data: Prisma.ClassesUpdateInput) {
+    delete data.registrations;
+
     return this.prisma.classes.update({ where: { id }, data });
   }
 
