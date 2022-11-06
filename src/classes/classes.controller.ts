@@ -13,8 +13,8 @@ export class ClassesController {
   }
 
   @MessagePattern('find-all-classes')
-  findAll() {
-    return this.classesService.findAll();
+  findAll(@Payload() payload: any) {
+    return this.classesService.findAll(payload.where);
   }
 
   @MessagePattern('find-class')

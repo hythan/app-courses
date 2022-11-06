@@ -10,8 +10,13 @@ export class ClassesService {
     return this.prisma.classes.create({ data });
   }
 
-  async findAll() {
+  async findAll(where?: any) {
+    if (where.courseId) {
+      where.courseId = +where.courseId;
+    }
+
     return await this.prisma.classes.findMany({
+      where: where,
       include: {
         course: { select: { name: true } },
         registrations: true,
