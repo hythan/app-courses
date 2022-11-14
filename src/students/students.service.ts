@@ -1,11 +1,11 @@
-import { Injectable, Request } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { BcryptService } from 'src/helpers/bcrypt.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class StudentsService {
-  constructor(private prisma: PrismaService, private bcrypt: BcryptService) { }
+  constructor(private prisma: PrismaService, private bcrypt: BcryptService) {}
 
   async create(data: Prisma.StudentsCreateInput) {
     data.password = await this.bcrypt.encrypt(data.password);
@@ -43,7 +43,6 @@ export class StudentsService {
 
   async validadeStudentUser(email: string, password: string) {
     const student = await this.findBy({ where: { email } });
-
     if (student && (await this.bcrypt.decrypt(password, student.password))) {
       const { password, ...result } = student;
       return result;

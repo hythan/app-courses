@@ -19,6 +19,7 @@ export class ClassesService {
       where: where,
       include: {
         course: { select: { name: true } },
+        teacher: { select: { name: true } },
         registrations: true,
       },
     });
