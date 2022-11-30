@@ -32,7 +32,7 @@ async function bootstrap() {
       urls: ['amqp://admin:admin@rabbitmq:5672'],
       queue: 'courses_queue',
       queueOptions: {
-        durable: false,
+        durable: true,
       },
     },
   });
@@ -54,7 +54,7 @@ async function bootstrap() {
       urls: ['amqp://admin:admin@rabbitmq:5672'],
       queue: 'students_courses_queue',
       queueOptions: {
-        durable: false,
+        durable: true,
       },
     },
   });
