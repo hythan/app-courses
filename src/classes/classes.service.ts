@@ -1,17 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ClassesService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: Prisma.ClassesCreateInput) {
-    return this.prisma.classes.create({ data });
+  create(data: Prisma.ClassesUncheckedCreateInput) {
+    return this.prisma.classes.create({ data }).catch((error) => {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code == 'P2003'
+      ) {
+        throw new ForbiddenException(
+          'Foreign key constraint failed on the field:' + error.meta.field_name,
+        );
+      }
+      throw error;
+    });
   }
 
   async findAll(where?: any) {
-    if (where.courseId) {
+    if (where && where.courseId) {
       where.courseId = +where.courseId;
     }
 
@@ -36,13 +47,14 @@ export class ClassesService {
     });
   }
 
-  update(id: number, data: Prisma.ClassesUpdateInput) {
+  async update(id: number, data: Prisma.ClassesUpdateInput) {
     delete data.registrations;
 
-    return this.prisma.classes.update({ where: { id }, data });
+    return await this.prisma.classes.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.prisma.classes.delete({ where: { id } });
+  async remove(id: number) {
+    await this.prisma.classes.delete({ where: { id } });
+    return 'Successfuly removed!';
   }
 }

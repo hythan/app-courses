@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { AdminsModule } from 'src/admins/admins.module';
 import { AdminsService } from 'src/admins/admins.service';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 describe('AdminService Int', () => {
   let prisma: PrismaService;
@@ -28,20 +28,14 @@ describe('AdminService Int', () => {
     });
 
     it('should not create duplicated email admin', async () => {
-      await adminService.create({
-        name: 'John',
-        email: 'john@gmail.com',
-        password: 'abc123',
-      });
-
-      await adminService.create({
+      const response: any = await adminService.create({
         name: 'John 2',
         email: 'john@gmail.com',
         password: 'abc123',
       });
 
+      expect(response.error).toBe('This email already been registred.');
       const admins = await adminService.all();
-
       expect(admins.length).toBe(1);
     });
 
@@ -57,6 +51,18 @@ describe('AdminService Int', () => {
       });
 
       expect(adminUpdated.name).toBe('Pedro');
+    });
+
+    it('should delete admin', async () => {
+      const admin = await adminService.create({
+        name: 'Adan',
+        email: 'adan@gmail.com',
+        password: 'abc123',
+      });
+
+      await adminService.remove(admin.id);
+      const response = await adminService.findBy({ where: { id: admin.id } });
+      expect(response).toBeNull();
     });
   });
 

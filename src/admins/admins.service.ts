@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Admins, Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { BcryptService } from '../helpers/bcrypt.service';
 import { ErrorsService } from '../helpers/errors.service';
-import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class AdminsService {
@@ -47,6 +47,9 @@ export class AdminsService {
   }
 
   async remove(id: number) {
+    if (id == 1) {
+      return 'You cannot remove the main admin.';
+    }
     return this.prisma.admins.delete({ where: { id } });
   }
 
