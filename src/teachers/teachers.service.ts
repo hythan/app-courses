@@ -22,7 +22,8 @@ export class TeachersService {
     return this.prisma.teachers.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.prisma.teachers.delete({ where: { id } });
+  async remove(id: number) {
+    await this.prisma.teachers.delete({ where: { id } });
+    return 'Successfuly removed!';
   }
 }

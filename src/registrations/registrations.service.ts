@@ -5,12 +5,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class RegistrationsService {
   constructor(private prisma: PrismaService) {}
-  async createRegistry(data: Prisma.RegistrationsCreateInput) {
+  async createRegistry(data: Prisma.RegistrationsUncheckedCreateInput) {
     const exists = await this.prisma.registrations.count({
       where: {
-        studentId: data.student.connect.id,
+        studentId: data.studentId,
         AND: {
-          classId: data.class.connect.id,
+          classId: data.classId,
         },
       },
     });
@@ -18,17 +18,17 @@ export class RegistrationsService {
     if (exists > 0) {
       return { status: 304, statusText: 'The record already exists' };
     }
-    return this.prisma.registrations.create({ data });
+    return await this.prisma.registrations.create({ data });
   }
 
-  findAll() {
-    return this.prisma.registrations.findMany();
+  async findAll() {
+    return await this.prisma.registrations.findMany();
   }
 
-  findBy(params: { where: Prisma.RegistrationsWhereUniqueInput }) {
+  async findBy(params: { where: Prisma.RegistrationsWhereUniqueInput }) {
     try {
       const { where } = params;
-      return this.prisma.registrations.findUnique({
+      return await this.prisma.registrations.findUnique({
         where,
         include: {
           student: true,
@@ -40,8 +40,8 @@ export class RegistrationsService {
     }
   }
 
-  update(id: number, data: Prisma.RegistrationsUpdateInput) {
-    return this.prisma.registrations.update({ where: { id }, data });
+  async update(id: number, data: Prisma.RegistrationsUpdateInput) {
+    return await this.prisma.registrations.update({ where: { id }, data });
   }
 
   async updateMany(ids: Array<number>) {
@@ -53,7 +53,8 @@ export class RegistrationsService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.registrations.delete({ where: { id } });
+  async remove(id: number) {
+    await this.prisma.registrations.delete({ where: { id } });
+    return 'Successfuly removed!';
   }
 }

@@ -8,12 +8,7 @@ export class RegistrationsController {
 
   @MessagePattern('create-registration')
   async create(@Payload() payload: any) {
-    const data = {
-      student: { connect: { id: +payload.data.studentId } },
-      class: { connect: { id: +payload.data.classId } },
-    };
-
-    return this.registrationsService.createRegistry(data);
+    return this.registrationsService.createRegistry(payload.data);
   }
 
   @MessagePattern('find-all-registrations')

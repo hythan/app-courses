@@ -38,7 +38,8 @@ export class StudentsService {
   }
 
   async remove(id: number) {
-    return this.prisma.students.delete({ where: { id } });
+    await this.prisma.students.delete({ where: { id } });
+    return 'Successfuly removed!';
   }
 
   async validadeStudentUser(email: string, password: string) {
