@@ -8,9 +8,9 @@ export class RegistrationsService {
   async createRegistry(data: Prisma.RegistrationsUncheckedCreateInput) {
     const exists = await this.prisma.registrations.count({
       where: {
-        studentId: data.studentId,
+        studentId: +data.studentId,
         AND: {
-          classId: data.classId,
+          classId: +data.classId,
         },
       },
     });
